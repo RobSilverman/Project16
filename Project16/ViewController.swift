@@ -23,6 +23,9 @@ class ViewController: UIViewController, MKMapViewDelegate {
         super.viewDidLoad()
         
         mapView.addAnnotations([london, oslo, paris, rome, washington])
+        
+        title = "Capital Cities App"
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .refresh, target: self, action: #selector(chooseMapType))
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -56,6 +59,29 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let ac = UIAlertController(title: placeName, message: info, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "OK", style: .default))
         present(ac, animated: true)
+    }
+    
+    @objc func chooseMapType() {
+        let ac = UIAlertController(title: "Select map type", message: nil, preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Standard", style: .default, handler: setMapType(_:)))
+        ac.addAction(UIAlertAction(title: "Hybrid", style: .default, handler: setMapType(_:)))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        present(ac, animated: true)
+    }
+    
+    func setMapType(_ action: UIAlertAction) {
+        guard let mapType = action.title else { return }
+        switch mapType {
+        case "Standard":
+            mapView.mapType = .standard
+            break
+        case "Hybrid":
+            mapView.mapType = .hybrid
+            break
+        default:
+            return
+        }
     }
 
 
